@@ -1,15 +1,21 @@
 # Time Series Analysis of Central African Republic Economic Data
 
-A comprehensive time series analysis examining economic indicators for the Central African Republic (CAR) from 1960 to 2017, with forecasts extending to 2027.
+A comprehensive time series analysis examining economic indicators for the Central African Republic (CAR) from 1960 to 2017, with 10-year forecasts extending through 2027 using ARIMA-based models.
+
+---
 
 ## Project Overview
 
-This project analyzes three key economic variables for the Central African Republic:
-- **GDP** (in USD)
+This project analyzes three key economic variables for the Central African Republic using classical time series techniques. The goal is to understand historical behavior, model temporal dependence, and generate statistically sound forecasts for major economic indicators.
+
+### Economic Indicators Analyzed
+- **Gross Domestic Product (GDP)** (in USD)
 - **Exports** (as % of GDP)
 - **Population**
 
-The analysis employs ARIMA modeling techniques to understand historical trends and generate 10-year forecasts for each variable.
+All analyses are conducted in R, with an emphasis on Reproducibility and statistical validation.
+
+---
 
 ## Objectives
 
