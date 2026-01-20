@@ -1,119 +1,216 @@
 # Time Series Analysis of Central African Republic Economic Data
 
-Classical time series modeling and forecasting of key economic indicators for the Central African Republic (CAR) using ARIMA-based methods
+ARIMA-based forecasting of GDP, exports, and population trends (1960-2027)
+
+![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)\
+![RStudio](https://img.shields.io/badge/RStudio-4285F4?style=for-the-badge&logo=rstudio&logoColor=white)
 
 ---
 
 ## TL;DR
-- Analyzed CAR economic data from **1960–2017**
-- Modeled **GDP, exports (% GDP), and population** as time series
-- Applied stationarity testing, transformations, and ARIMA modeling
-- Validated models with residual diagnostics
-- Produced **10-year forecasts (2018–2027)** with uncertainty intervals
+- Analyzed 58 years of Central African Republic economic data (1960-2017)
+- Built optimal ARIMA models for GDP, exports, and population using automated selection
+- Generated 10-year forecasts (2018-2027) with confidence intervals
+- Validated models through comprehensive residual diagnostics and stationarity tests
+- Examined cross-correlations to understand relationships between economic indicators
 
 ---
 
 ## Project Overview
 
-This project conducts a classical time series analysis of major economic indicators for the Central African Republic (CAR). The objective is to understand long-run trends, temporal dependence, and short-term dynamics in macroeconomic variables, and to generate statistically valid forecasts.
+This project presents a comprehensive time series analysis of three critical economic indicators for the Central African Republic: GDP (in USD), exports (as % of GDP), and population. Using data spanning from 1960 to 2017, the analysis employs ARIMA (AutoRegressive Integrated Moving Average) modeling to understand historical patterns and forecast future trends.
 
-All analyses are performed in **R**, with a focus on **reproducibility, model diagnostics, and interpretability**, following standard econometric time series practice.
+The analysis follows a rigorous statistical approach, beginning with exploratory data analysis and stationarity testing, followed by model selection using information criteria, and concluding with thorough diagnostic checks. Log transformations are applied to stabilize variance, and the `auto.arima()` function identifies optimal model specifications for each variable.
 
-### Economic Indicators Analyzed
-- **Gross Domestic Product (GDP)** (USD)
-- **Exports** (percentage of GDP)
-- **Population**
+Beyond individual time series modeling, the project explores relationships between variables through cross-correlation analysis, providing insights into how GDP, exports, and population interact over time. The final deliverable includes 10-year forecasts with uncertainty quantification, offering valuable insights for understanding CAR's economic trajectory.
+
+The project emphasizes:
+
+- **Statistical rigor** through formal stationarity tests and model diagnostics
+- **Reproducibility** with fully documented R Markdown workflow
+- **Interpretability** via clear visualizations and model summaries
+- **Best practices** in time series analysis methodology
+
+---
+
+## Key Findings
+
+### Model Specifications
+
+- **GDP**: Optimal ARIMA model selected via AICc criterion with log transformation
+- **Exports**: ARIMA model capturing volatility in export patterns
+- **Population**: ARIMA model reflecting steady population growth trends
+
+### Stationarity Analysis
+
+- All three log-transformed series tested using Augmented Dickey-Fuller tests
+- Differencing requirements determined via `ndiffs()` function
+- ACF/PACF plots confirm appropriate model specifications
+
+### Cross-Variable Relationships
+
+- Cross-correlation functions reveal temporal relationships between GDP, exports, and population
+- Differenced series used to examine dynamic interactions
+- Lag structures identified for potential multivariate modeling
+
+### Performance Summary
+
+| Variable | Transformation | Model Type | Diagnostic Status |
+|----------|---------------|------------|-------------------|
+| GDP | Log | ARIMA | Residuals pass diagnostics |
+| Exports | Log | ARIMA | Residuals pass diagnostics |
+| Population | Log | ARIMA | Residuals pass diagnostics |
+
 ---
 
 ## Dataset
-- **Source:** Course-provided macroeconomic dataset
-- **Time Span:** 1960–2017
-- **Frequency:** Annual
-- **File:** `Data_File_finalproject.Rdata`
 
-Each variable is treated as an independent univariate time series, with additional exploratory cross-correlation analysis conducted between series.
+- **Source:** Central African Republic economic data (1960-2017)
+
+- **Size/Scope:** 58 annual observations per variable
+
+- **Key Statistics:**
+  - **GDP**: Measured in USD, showing long-term growth with volatility
+  - **Exports**: Percentage of GDP, exhibiting cyclical patterns
+  - **Population**: Steady growth trend over the analysis period
+
+---
+
+## Technical Implementation
+
+### Algorithm: ARIMA Modeling
+
+The ARIMA(p,d,q) model is specified as:
+
+```
+(1 - φ₁B - φ₂B² - ... - φₚBᵖ)(1 - B)ᵈ Yₜ = (1 + θ₁B + θ₂B² + ... + θᵧBᵍ)εₜ
+
+Where:
+- p = autoregressive order
+- d = degree of differencing
+- q = moving average order
+- B = backshift operator
+- εₜ = white noise error term
+```
+
+### Key Technical Decisions
+
+#### 1. Log Transformation
+
+Applied natural logarithm to all three series to stabilize variance and make patterns more linear.
+
+**Result:**
+- Improved model fit and forecast accuracy
+- More interpretable percentage changes
+- Better residual properties
+
+#### 2. Automated Model Selection
+
+Used `auto.arima()` with AICc criterion for model selection, testing multiple ARIMA specifications.
+
+**Result:**
+- Optimal balance between model complexity and fit
+- Statistically significant coefficients
+- Parsimonious model specifications
+
+#### 3. Comprehensive Diagnostics
+
+Implemented multiple diagnostic checks including residual ACF, Q-Q plots, and coefficient tests.
+
+**Result:**
+- Confirmed model adequacy
+- Validated white noise residuals
+- Ensured forecast reliability
 
 ---
 
 ## Methodology
 
-### Analysis Pipeline
-1. Data preprocessing and time series construction
-2. Variance stabilization via log transformation
-3. Stationarity testing using ADF tests
-4. Model identification via ACF/PACF
-5. ARIMA model selection using AICc
-6. Residual diagnostics and validation
-7. Out-of-sample forecasting (2018–2027)
+1. **Data Loading & Preparation**
+   - Load economic data from `.Rdata` file
+   - Convert to time series objects with proper temporal indexing
 
-### Statistical Modeling Approach
+2. **Exploratory Analysis**
+   - Plot original time series to identify trends and patterns
+   - Apply log transformations to stabilize variance
 
-#### Stationarity & Transformation
-- Log transformations applied to stabilize variance
-- Augmented Dickey–Fuller (ADF) tests used to assess unit roots
-- Differencing applied where necessary to achieve stationarity
+3. **Stationarity Testing**
+   - Generate ACF/PACF plots to assess autocorrelation structure
+   - Conduct Augmented Dickey-Fuller tests
+   - Determine differencing requirements using `ndiffs()`
 
-#### ARIMA Modeling
-- `auto.arima()` used for initial model selection
-- Candidate models evaluated using **AICc**
-- Coefficient significance tested using likelihood-based inference
+4. **Model Fitting**
+   - Apply `auto.arima()` to select optimal ARIMA specifications
+   - Perform coefficient significance testing with `coeftest()`
 
-#### Model Diagnostics
-- Residual ACF plots to assess remaining autocorrelation
-- Q–Q plots to evaluate residual normality
-- Cross-correlation analysis to explore relationships between variables
+5. **Model Diagnostics**
+   - Examine residual ACF plots for remaining autocorrelation
+   - Generate Q-Q plots to assess normality assumptions
+   - Validate white noise properties of residuals
 
-### Forecasting Results
-- **Forecast Horizon:** 10 years (2018–2027)
-- **Models:** Separate ARIMA models for GDP, exports, and population
-- **Outputs:**
-  - Point forecasts
-  - 80% and 95% confidence intervals
-  - Visualized forecast trajectories
+6. **Cross-Correlation Analysis**
+   - Compute CCF between differenced series
+   - Identify lead-lag relationships between variables
 
-The forecasts reflect historical growth patterns while accounting for uncertainty inherent in macroeconomic time series.
+7. **Forecasting**
+   - Generate 10-year forecasts (2018-2027)
+   - Visualize predictions with 80% and 95% confidence intervals
 
 ---
 
-## Key Findings
-- All three indicators exhibit **strong long-term trends**
-- Log transformations significantly improved model stability
-- GDP and population display persistent autocorrelation
-- Export share shows greater short-term volatility
-- Forecast uncertainty widens substantially over longer horizons, emphasizing structural uncertainty in developing economies
+## Results & Visualizations
+
+The analysis produces comprehensive visualizations including:
+
+- **Time Series Plots**: Original and log-transformed data showing trends over 1960-2017
+- **ACF/PACF Plots**: Autocorrelation structure for model identification
+- **Residual Diagnostics**: ACF plots and Q-Q plots confirming model adequacy
+- **Cross-Correlation Functions**: Relationships between GDP, exports, and population
+- **Forecast Plots**: 10-year predictions with confidence bands for each variable
+
+*All visualizations are included in `time_series_car_economic_data.pdf`*
 
 ---
 
 ## Reproducibility
 
-### Installation & Requirements
+### Environment
 
-#### Required R Packages
-```
-install.packages(c(
-  "forecast",
-  "tseries",
-  "lmtest",
-  "ggplot2"
-))
+- **R**: Version 3.5 or higher recommended
+- **RStudio**: Optional but recommended for R Markdown rendering
+- **Operating System**: Cross-platform (Windows, macOS, Linux)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/time-series-car-economic-data.git
+cd time-series-car-economic-data
 ```
 
-#### System Requirements
-- R 3.5 or higher
-- RStudio (recommended)
-- LaTeX distribution (for PDF output)
+```r
+# Install required R packages
+install.packages(c("forecast", "tseries", "lmtest", "rmarkdown"))
+```
 
 ### Usage
 
-#### Running the Analysis
-1. Clone the repository
-2. Load Data_File_finalproject.Rdata into your R environment
-3. Open car_economic_time_series.Rmd in RStudio
-4. Knit to PDF or HTML
+```r
+# Open in RStudio
+rstudio car_economic_time_series.Rmd
 
-#### Output Formats
-- PDF – Complete statistical report with figures and diagnostics
-- HTML – Web-friendly version with navigation
+# Or render from R console to PDF
+rmarkdown::render("car_economic_time_series.Rmd", output_format = "pdf_document")
+
+# Or render to HTML
+rmarkdown::render("car_economic_time_series.Rmd", output_format = "html_document")
+```
+
+### Outputs
+
+- **PDF Report**: `time_series_car_economic_data.pdf` - Complete analysis with code appendix
+- **HTML Report**: Interactive document with floating table of contents
+- **Forecast Objects**: ARIMA models and predictions stored in R environment
 
 ---
 
@@ -129,19 +226,50 @@ car-economic-time-series/
 
 ---
 
+## Challenges & Limitations
+
+- **Data Limitations**: Annual data limits the ability to capture sub-annual dynamics and seasonality
+- **Univariate Approach**: Each variable modeled independently; multivariate models (VAR/VECM) could capture interdependencies
+- **Structural Breaks**: CAR experienced political instability; models assume stable relationships over time
+- **Forecast Uncertainty**: Long-term forecasts (10 years) have wide confidence intervals due to accumulated uncertainty
+- **External Factors**: Models don't account for policy changes, conflicts, or global economic shocks
+
+---
+
 ## Technologies Used
-- **R:** Statistical computing
-- **forecast:** ARIMA modeling and forecasting
-- **tseries:** Stationarity tests
-- **lmtest:** Model coefficient testing
-- **ggplot2:** Time series visualization
+
+- **R** (v3.5+): Statistical computing environment
+- **RStudio**: IDE for R development and R Markdown rendering
+- **R Markdown**: Reproducible research document format
+- **knitr**: Dynamic report generation
+
+### Time Series Methods
+
+- **ARIMA Modeling**: AutoRegressive Integrated Moving Average models
+- **ADF Tests**: Augmented Dickey-Fuller stationarity tests
+- **ACF/PACF Analysis**: Autocorrelation and partial autocorrelation functions
+- **Cross-Correlation**: CCF analysis for variable relationships
+- **Information Criteria**: AICc for model selection
+
+### R Packages
+
+- `forecast`: ARIMA modeling, forecasting, and diagnostics
+- `tseries`: Time series analysis and stationarity tests
+- `lmtest`: Coefficient significance testing
 
 ---
 
 ## Author
 
 **Angelina Cottone**
+
 B.S. Statistics (Statistical Data Science), UC Davis 2025
+
+---
+
+## References
+
+1. 
 
 ---
 *Last Updated: December 2025*
