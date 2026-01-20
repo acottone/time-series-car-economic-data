@@ -1,0 +1,136 @@
+---
+title: "Time Series Analysis of Central African Republic Economic Data"
+author: "Angelina Cottone"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r libraries, message=FALSE}
+library(forecast)
+library(tseries)
+library(lmtest)
+```
+
+```{r load-data}
+load("Data_File_finalproject.Rdata")
+gdp_ts <- ts(finalPro_data$GDP, start = 1960, frequency = 1)
+exp_ts <- ts(finalPro_data$Exports, start = 1960, frequency = 1)
+pop_ts <- ts(finalPro_data$Population, start = 1960, frequency = 1)
+```
+
+```{r ts-plots, fig.height=8}
+par(mfrow = c(3, 1))
+plot(gdp_ts, main = "CAR GDP (1960-2017)", ylab = "GDP (USD)")
+plot(exp_ts, main = "CAR Exports (1960-2017)", ylab = "Exports (% of GDP)")
+plot(pop_ts, main = "CAR Population (1960-2017)", ylab = "Population")
+```
+
+```{r transform, fig.height=4}
+gdp_log <- log(gdp_ts)
+exp_log <- log(exp_ts)
+pop_log <- log(pop_ts)
+
+par(mfrow = c(1, 3))
+plot(gdp_log, main = "Log(GDP)")
+plot(exp_log, main = "Log(Exports)")
+plot(pop_log, main = "Log(Population)")
+```
+
+```{r acf-pacf, fig.height=8}
+par(mfrow = c(3, 2))
+acf(gdp_log, main = "ACF: Log(GDP)")
+pacf(gdp_log, main = "PACF: Log(GDP)")
+acf(exp_log, main = "ACF: Log(Exports)")
+pacf(exp_log, main = "PACF: Log(Exports)")
+acf(pop_log, main = "ACF: Log(Population)")
+pacf(pop_log, main = "PACF: Log(Population)")
+```
+
+```{r adf-tests}
+adf.test(gdp_log)
+adf.test(exp_log)
+adf.test(pop_log)
+```
+
+```{r ndiffs}
+cat("Recommended differencing:\n")
+cat("GDP:", ndiffs(gdp_log), "\n")
+cat("Exports:", ndiffs(exp_log), "\n")
+cat("Population:", ndiffs(pop_log), "\n")
+```
+
+```{r fit-gdp}
+fit_gdp <- auto.arima(gdp_log)
+fit_gdp
+```
+
+```{r coef-gdp}
+coeftest(fit_gdp)
+```
+
+```{r fit-exp}
+fit_exp <- auto.arima(exp_log)
+fit_exp
+```
+
+```{r coef-exp}
+coeftest(fit_exp)
+```
+
+```{r fit-pop}
+fit_pop <- auto.arima(pop_log)
+fit_pop
+```
+
+```{r coef-pop}
+coeftest(fit_pop)
+```
+
+```{r diagnostics, fig.height=9}
+par(mfrow = c(3, 2))
+acf(residuals(fit_gdp), main = "GDP Residuals ACF")
+qqnorm(residuals(fit_gdp), main = "GDP Residuals QQ")
+qqline(residuals(fit_gdp))
+acf(residuals(fit_exp), main = "Exports Residuals ACF")
+qqnorm(residuals(fit_exp), main = "Exports Residuals QQ")
+qqline(residuals(fit_exp))
+acf(residuals(fit_pop), main = "Population Residuals ACF")
+qqnorm(residuals(fit_pop), main = "Population Residuals QQ")
+qqline(residuals(fit_pop))
+```
+
+```{r ccf-analysis, fig.height=4}
+par(mfrow = c(1, 3))
+ccf(diff(gdp_log), diff(exp_log), main = "CCF: GDP vs Exports", lag.max = 15)
+ccf(diff(gdp_log), diff(pop_log), main = "CCF: GDP vs Population", lag.max = 15)
+ccf(diff(exp_log), diff(pop_log), main = "CCF: Exports vs Population", lag.max = 15)
+```
+
+```{r forecasts, fig.height=8}
+fc_gdp <- forecast(fit_gdp, h = 10)
+fc_exp <- forecast(fit_exp, h = 10)
+fc_pop <- forecast(fit_pop, h = 10)
+
+par(mfrow = c(3, 1))
+plot(fc_gdp, main = "GDP Forecast (2018-2027)")
+plot(fc_exp, main = "Exports Forecast (2018-2027)")
+plot(fc_pop, main = "Population Forecast (2018-2027)")
+```
+
+```{r summary}
+cat("GDP: ARIMA", arimaorder(fit_gdp), "| AICc =", round(fit_gdp$aicc, 2), "\n")
+cat("Exports: ARIMA", arimaorder(fit_exp), "| AICc =", round(fit_exp$aicc, 2), "\n")
+cat("Population: ARIMA", arimaorder(fit_pop), "| AICc =", round(fit_pop$aicc, 2), "\n")
+```
+
+```{r all_code_appendix, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
