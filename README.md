@@ -263,13 +263,31 @@ car-economic-time-series/
 
 **Angelina Cottone**
 
-B.S. Statistics (Statistical Data Science), UC Davis 2025
+*Course*: STA 137 - Applied Time Series Analysis
+
+*Institution*: University of California, Davis
+
+*Date*: December 2025
 
 ---
 
 ## References
 
-1. 
+### Implementation
+
+- GeeksforGeeks. (2025a, July 23). Augmented dickey-fuller (ADF). GeeksforGeeks.
+https://www.geeksforgeeks.org/machine-learning/augmented-dickey-fuller-adf/
+- GeeksforGeeks. (2025b, July 23). Autocorrelation and partial autocorrelation. GeeksforGeeks.
+https://www.geeksforgeeks.org/r-machine-learning/autocorrelation-and-partial-autocorrel
+ation/
+- GeeksforGeeks. (2025c, August 19). Model Selection for Arima. GeeksforGeeks.
+https://www.geeksforgeeks.org/data-science/model-selection-for-arima/
+- Hyndman, R., & Athanasopoulos, G. (n.d.-a). Forecasting: Principles and practice (2nd ed).
+ARIMA modelling in R. https://otexts.com/fpp2/arima-r.html
+- Hyndman, R., & Athanasopoulos, G. (n.d.-b). Forecasting: Principles and practice (2nd ed).
+Estimation and order selection. https://otexts.com/fpp2/arima-estimation.html
+- Shumway, R. H., & Stoffer, D. S. (2017). Time series analysis and its applications: With R
+examples (4th ed.). Springer.
 
 ---
 *Last Updated: December 2025*
